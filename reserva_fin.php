@@ -1,10 +1,12 @@
+<?php
+	require_once("/conexion.php");
+?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 <link rel="stylesheet" href="css/reset.css" type="text/css" media="all">
 <link rel="stylesheet" href="css/style.css" type="text/css" media="all">
-<link rel="stylesheet" href="css/jquery-ui.css" type="text/css" media="all">
 <link rel="shortcut icon" href="images/favicon.ico">
 <script type="text/javascript" src="js/cufon-yui.js"></script>
 <script type="text/javascript" src="js/cufon-replace.js"></script>
@@ -12,8 +14,8 @@
 <script type="text/javascript" src="js/Myriad_Pro_400.font.js"></script>
 <script type="text/javascript" src="js/jquery-1.11.1.min.js"></script>
 <script type="text/javascript" src="js/jqueryui.js"></script>
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.1/themes/base/jquery-ui.css" />
 <script type="text/javascript" src="js/validaciones.js"></script>
-
 <!-- Supersized slider background -->
 <link rel="stylesheet" href="css/supersized.css" type="text/css" media="screen" />
 <script type="text/javascript" src="js/supersized.3.2.7.min.js"></script>
@@ -39,22 +41,24 @@
     });
 </script>
 <!-- END Supersized -->
+
 <script>
 $(function() {
 $( ".datepicker" ).datepicker();
 });
 </script>
+
 <title>Aerolinea Universitaria</title>	
 </head>
 <body>
 	<div id="header">
 		<div class="wrapper">
-			<a href="index.php"><div id="logo"></div></a>
+			<a href="index.html"><div id="logo"></div></a>
 			<div class="navbar">
 				<ul id="menu">
-					<li id="menu_active"><a href="index.php">Home</a></li>
-					<li><a href="flota.html">Nuestra Flota</a></li>
+					<li><a href="index.php">Home</a></li>
 					<li><a href="destinos.html">Destinos</a></li>
+					<li id="menu_active"><a href="pagos.php">Pagos</a></li>
 					<li><a href="checkinn.php">Check inn</a></li>
 					<li><a href="contacto.html">Contacto</a></li>
 				</ul>
@@ -63,35 +67,41 @@ $( ".datepicker" ).datepicker();
 	</div>
 
 	<div class="wrapper">
-		<div id="formlista">
-			<div id="formdatos">
-				<form name="datosusuario" action="reserva_fin.php" method="post" id="datosusuario" onSubmit="return validar_datos()">
-					<?php
-						$id_vuelo = $_POST['id_vuelo'];
-						$id_categorias = $_POST['id_categorias'];
-						$idaovuelta = $_POST['idaovuelta'];
-						$fechaida = $_POST['fechaida'];
-						$fechavuelta = $_POST['fechavuelta'];
-					?>
-					<label>Nombre y apellido:</label>
-					<input type="text" name="nombre" id="nombre"/>
-					<br/><br/>
-					<label>Numero de documento:</label>
-					<input type="text" name="dni" id="dni"/>
-					<br/><br/>
-					<label>Fecha de Nacimiento:</label>
-					<input type="text" class="datepicker" name="fecha" class="fecha" id="fecha" />
-					<br/><br/>
-					<label>Correo electronico:</label>
-					<input type="text" name="correo" id="correo"/>
-					<input type="hidden" id="id_vuelo" name="id_vuelo" value="<?= $id_vuelo ?>" />
-					<input type="hidden" id="id_categorias" name="id_categorias" value="<?= $id_categorias ?>" />
-					<input type="hidden" id="idaovuelta" name="idaovuelta" value="<?= $idaovuelta ?>" />
-					<input type="hidden" id="categoria" name="categoria" value="<?= $categoria ?>" />
-					<input type="hidden" id="fechaida" name="fechaida" value="<?= $fechaida ?>" />
-					<input type="hidden" id="fechavuelta" name="fechavuelta" value="<?= $fechavuelta ?>" />
-					<input type="submit" value="Reservar" id="botonreserva" />
-				</form>
+		<div id="formulario">
+			<div id="formpago">
+				<?php
+					$nombre = $_POST['nombre'];
+					$dni = $_POST['dni'];
+					$fecha = $_POST['fecha'];
+					$correo = $_POST['correo'];
+					//$id_vuelo = $_POST['id_vuelo'];
+					//$id_categorias = $_POST['id_categorias'];
+					//$idaovuelta = $_POST['idaovuelta'];
+					//$fechaida = $_POST['fechaida'];
+					//$fechavuelta = $_POST['fechavuelta'];
+
+					$query="Insert Into pasajeros (nombre, dni, fecha, correo) Values ('$nombre','$dni','$fecha','$correo')";
+					mysqli_query($link, $query);
+
+					$query="SELECT p.id
+							FROM pasajeros as p
+							WHERE nombre='$nombre'";
+					$result=mysqli_query($link, $query);
+					$row = mysqli_fetch_object($result);
+					echo '<p>' . $row->id. '</p>';
+					//if($idaovuelta=="soloida"){
+					//	$query="Insert Into reservas (id_pasajero, id_vuelo, id_categorias, fecha, fecha_vuelo) Values ('$id_pasajero','$id_vuelo','$id_categorias','$fecha','$fecha_ida')";
+					//} else {
+					//	$query="Insert Into reservas (id_pasajero, id_vuelo, id_categorias, fecha, fecha_vuelo) Values ('$id_pasajero','$id_vuelo','$id_categorias','$fecha','$fecha_ida'), ('$id_pasajero','$id_vuelo','$id_categorias','$fecha','$fecha_vuelta')";
+					//}
+
+					//$query="Insert Into pasajes (id_categorias, id_vuelo, id_pasajero, fecha, id_reserva) Values ('$id_categorias','$id_vuelo','$id_pasajero','$fecha','$id')";
+					//mysqli_query($link, $query);
+					//mysqli_close($link);
+
+					echo'<p>Reserva realizada con exito</p>';
+					
+				?>
 			</div>
 		</div>
 	</div>

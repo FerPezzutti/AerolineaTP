@@ -72,7 +72,7 @@
 					$fechavuelta = $_POST['fechavuelta'];
 					$categoria = $_POST['categoria'];
 					$diafechaida = substr($fechaida, 0, 2);
-					$query="SELECT a.ciudad as origen, aer.ciudad as destino, v.precio_economy, v.precio_primera, av.modelo, vd.dia as diadevuelo
+					$query="SELECT a.ciudad as origen, aer.ciudad as destino, v.precio_economy, v.precio_primera, av.modelo, vd.dia as diadevuelo, v.id as id_vuelo
 							FROM vuelos as v join aeropuertos as a on v.id_origen=a.id join aviones as av on v.id_avion=av.id join vuelo_dia as vd on v.id=vd.id_vuelo join aeropuertos as aer on v.id_destino=aer.id
 							WHERE a.id='$origen' and aer.id='$destino' and vd.dia like '$diafechaida'";
 
@@ -109,7 +109,7 @@
 							echo'<li>Desde: <span class="spanlista">' . $row->destino . '</span></li>';
 							echo'<li>Hacia: <span class="spanlista">' . $row->origen . '</span></li>';
 							echo'<li>Fecha: <span class="spanlista">' . $fechavuelta . '</span></li>';
-								if($categoria=="2"){
+								if($categoria=="1"){
 									echo'<li>Precio final: <span class="spanlista">$' . $row->precio_primera . '</span></li>';
 								} else {
 									echo'<li>Precio final: <span class="spanlista">$' . $row->precio_economy . '</span></li>';
@@ -118,15 +118,15 @@
 							echo'</ul>'; 
 							}
 						echo'<br/>';
+						echo'<input type="hidden" id="id_vuelo" name="id_vuelo" value="' . $row->id_vuelo . '" />';
+						echo'<input type="hidden" id="id_categorias" name="id_categorias" value="' . $categoria . '" />';
+						echo'<input type="hidden" id="idaovuelta" name="idaovuelta" value="' . $idaovuelta . '" />';
+						echo'<input type="hidden" id="fechaida" name="fechaida" value="' . $fechaida . '" />';
+						echo'<input type="hidden" id="fechavuelta" name="fechavuelta" value="' . $fechavuelta . '" />';
 						echo'<input type="submit" value="Continuar" id="botoncont" />';
 						}
 					}
 				?>
-				<input type="hidden" name="origen" value="<?= $origen ?>" />
-				<input type="hidden" name="destino" value="<?= $destino ?>" />
-				<input type="hidden" name="categoria" value="<?= $categoria ?>" />
-				<input type="hidden" name="fechaida" value="<?= $fechaida ?>" />
-				<input type="hidden" name="fechavuelta" value="<?= $fechavuelta ?>" />
 			</form>
 		</div>
 	</div>
