@@ -74,33 +74,39 @@ $( ".datepicker" ).datepicker();
 					$dni = $_POST['dni'];
 					$fecha = $_POST['fecha'];
 					$correo = $_POST['correo'];
-					//$id_vuelo = $_POST['id_vuelo'];
-					//$id_categorias = $_POST['id_categorias'];
-					//$idaovuelta = $_POST['idaovuelta'];
-					//$fechaida = $_POST['fechaida'];
-					//$fechavuelta = $_POST['fechavuelta'];
+					$id_vuelo = $_POST['id_vuelo'];
+					$id_categorias = $_POST['id_categorias'];
+					$idaovuelta = $_POST['idaovuelta'];
+					$fechaida = $_POST['fechaida'];
+					$fechavuelta = $_POST['fechavuelta'];
 
 					$query="Insert Into pasajeros (nombre, dni, fecha, correo) Values ('$nombre','$dni','$fecha','$correo')";
 					mysqli_query($link, $query);
 
 					$query="SELECT p.id
 							FROM pasajeros as p
-							WHERE nombre='$nombre'";
+							WHERE dni='$dni'";
+
 					$result=mysqli_query($link, $query);
 					$row = mysqli_fetch_object($result);
-					echo '<p>' . $row->id. '</p>';
-					//if($idaovuelta=="soloida"){
-					//	$query="Insert Into reservas (id_pasajero, id_vuelo, id_categorias, fecha, fecha_vuelo) Values ('$id_pasajero','$id_vuelo','$id_categorias','$fecha','$fecha_ida')";
-					//} else {
-					//	$query="Insert Into reservas (id_pasajero, id_vuelo, id_categorias, fecha, fecha_vuelo) Values ('$id_pasajero','$id_vuelo','$id_categorias','$fecha','$fecha_ida'), ('$id_pasajero','$id_vuelo','$id_categorias','$fecha','$fecha_vuelta')";
-					//}
+					$id_pasajero=$row->id;
 
-					//$query="Insert Into pasajes (id_categorias, id_vuelo, id_pasajero, fecha, id_reserva) Values ('$id_categorias','$id_vuelo','$id_pasajero','$fecha','$id')";
-					//mysqli_query($link, $query);
-					//mysqli_close($link);
+					if($idaovuelta=="soloida"){
+					$query="Insert Into reservas (id_pasajero, id_vuelo, id_categorias, fecha_vuelo) Values ('$id_pasajero','$id_vuelo','$id_categorias', '$fechaida')";
+					} else {
+					$query="Insert Into reservas (id_pasajero, id_vuelo, id_categorias, fecha_vuelo) Values ('$id_pasajero','$id_vuelo','$id_categorias', '$fechaida'), ('$id_pasajero','$id_vuelo','$id_categorias', '$fechavuelta')";
+					}
+					mysqli_query($link, $query);
+					mysqli_close($link);
+// ver tema del numero de reserva
+					$query="SELECT MAX(id) 
+							FROM reservas";
+					$result=mysqli_query($link, $query);
+					$row = mysqli_fetch_object($result);
+					$id_de_reserva = $row->id;
 
 					echo'<p>Reserva realizada con exito</p>';
-					
+					echo'<p>Su numero de reserva es' . $id_de_reserva . '</p>';
 				?>
 			</div>
 		</div>
