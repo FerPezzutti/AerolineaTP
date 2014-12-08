@@ -103,6 +103,5 @@ function validar_pagarreserva(){
     alert(error);
     error="";
     return false;
-  } else alert("Pago exitoso");
-      return true;
+  } else return true;
 }

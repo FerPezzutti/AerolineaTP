@@ -1,10 +1,12 @@
+<?php
+	require_once("/conexion.php");
+?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 <link rel="stylesheet" href="css/reset.css" type="text/css" media="all">
 <link rel="stylesheet" href="css/style.css" type="text/css" media="all">
-<link rel="stylesheet" href="css/jquery-ui.css" type="text/css" media="all">
 <link rel="shortcut icon" href="images/favicon.ico">
 <script type="text/javascript" src="js/cufon-yui.js"></script>
 <script type="text/javascript" src="js/cufon-replace.js"></script>
@@ -12,8 +14,8 @@
 <script type="text/javascript" src="js/Myriad_Pro_400.font.js"></script>
 <script type="text/javascript" src="js/jquery-1.11.1.min.js"></script>
 <script type="text/javascript" src="js/jqueryui.js"></script>
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.1/themes/base/jquery-ui.css" />
 <script type="text/javascript" src="js/validaciones.js"></script>
-
 <!-- Supersized slider background -->
 <link rel="stylesheet" href="css/supersized.css" type="text/css" media="screen" />
 <script type="text/javascript" src="js/supersized.3.2.7.min.js"></script>
@@ -39,27 +41,24 @@
     });
 </script>
 <!-- END Supersized -->
+
 <script>
-$.datepicker.regional['es'] = {
-monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
-dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
-};
-$.datepicker.setDefaults($.datepicker.regional['es']);
 $(function() {
-$( ".datepicker" ).datepicker({ dateFormat: "DD, d MM, yy" });
+$( ".datepicker" ).datepicker();
 });
 </script>
+
 <title>Aerolinea Universitaria</title>	
 </head>
 <body>
 	<div id="header">
 		<div class="wrapper">
-			<a href="index.php"><div id="logo"></div></a>
+			<a href="index.html"><div id="logo"></div></a>
 			<div class="navbar">
 				<ul id="menu">
-					<li id="menu_active"><a href="index.php">Home</a></li>
-					<li><a href="flota.html">Nuestra Flota</a></li>
+					<li><a href="index.php">Home</a></li>
 					<li><a href="destinos.html">Destinos</a></li>
+					<li id="menu_active"><a href="pagos.php">Pagos</a></li>
 					<li><a href="checkinn.php">Check inn</a></li>
 					<li><a href="contacto.html">Contacto</a></li>
 				</ul>
@@ -68,35 +67,21 @@ $( ".datepicker" ).datepicker({ dateFormat: "DD, d MM, yy" });
 	</div>
 
 	<div class="wrapper">
-		<div id="formlista">
-			<div id="formdatos">
-				<form name="datosusuario" action="" method="post" id="datosusuario" onSubmit="return validar_datos()">
+		<div id="formulario">
+			<div id="formpago">
 				<?php
-					$origen = $_POST['origen'];
-					$destino = $_POST['destino'];
-					$idaovuelta = $_POST['idaovuelta'];
-					$fechaida = $_POST['fechaida'];
-					$fechavuelta = $_POST['fechavuelta'];
-					$categoria = $_POST['categoria'];
+					$id = $_POST['id'];
+					$id_pasajero = $_POST['id_pasajero'];
+					$id_vuelo = $_POST['id_vuelo'];
+					$id_categorias = $_POST['id_categorias'];
+					$fecha = $_POST['fecha'];
+					$query="Insert Into pasajes (id_categorias, id_vuelo, id_pasajero, fecha, id_reserva) Values ('$id_categorias','$id_vuelo','$id_pasajero','$fecha','$id')";
+					mysqli_query($link, $query);
+					mysqli_close($link);
+
+					echo'<p>Pago registrado</p>';
+					
 				?>
-					<label>Nombre y apellido:</label>
-					<input type="text" name="nombre" id="nombre"/>
-					<br/><br/>
-					<label>Numero de documento:</label>
-					<input type="text" name="dni" id="dni"/>
-					<br/><br/>
-					<label>Fecha de Nacimiento:</label>
-					<input type="text" class="datepicker" name="fechanac" class="fechanac" id="fechanac" />
-					<br/><br/>
-					<label>Correo electronico:</label>
-					<input type="text" name="correo" id="email"/>
-					<input type="submit" value="Reservar" id="botonreserva" />
-					<input type="hidden" name="origen" value="<?= $origen ?>" />
-					<input type="hidden" name="destino" value="<?= $destino ?>" />
-					<input type="hidden" name="categoria" value="<?= $categoria ?>" />
-					<input type="hidden" name="fechaida" value="<?= $fechaida ?>" />
-					<input type="hidden" name="fechavuelta" value="<?= $fechavuelta ?>" />
-				</form>
 			</div>
 		</div>
 	</div>

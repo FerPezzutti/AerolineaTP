@@ -64,10 +64,6 @@
 	<div class="wrapper">
 		<div id="formlista">
 			<form name="seleccionvuelo" action="ingreso_datos.php" method="post" id="seleccionvuelo" onSubmit="return validar_vuelos()">
-				<input type="hidden" name="origen" value="<?= $origen ?>" />
-				<input type="hidden" name="destino" value="<?= $destino ?>" />
-				<input type="hidden" name="categoria" value="<?= $categoria ?>" />
-				<input type="hidden" name="fecha_vuelo" value="<?= $fecha_vuelo ?>" />
 				<?php
 					$origen = $_POST['origen'];
 					$destino = $_POST['destino'];
@@ -126,6 +122,11 @@
 						}
 					}
 				?>
+				<input type="hidden" name="origen" value="<?= $origen ?>" />
+				<input type="hidden" name="destino" value="<?= $destino ?>" />
+				<input type="hidden" name="categoria" value="<?= $categoria ?>" />
+				<input type="hidden" name="fechaida" value="<?= $fechaida ?>" />
+				<input type="hidden" name="fechavuelta" value="<?= $fechavuelta ?>" />
 			</form>
 		</div>
 	</div>

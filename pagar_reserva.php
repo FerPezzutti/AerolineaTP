@@ -1,3 +1,6 @@
+<?php
+	require_once("/conexion.php");
+?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -66,9 +69,29 @@ $( ".datepicker" ).datepicker();
 	<div class="wrapper">
 		<div id="formulariopagos">
 			<div id="formpagarreserva">
-				<p>Pago pendiente</p>
-				<br/>
-				<form action="efectuar_pago.php" method="post" onSubmit="return validar_pagarreserva()">
+				<form action="pago_fin.php" method="post" onSubmit="return validar_pagarreserva()">
+					<?php
+					$codigo = $_POST['codigo'];
+					$query="SELECT *
+							FROM reservas
+							WHERE id='$codigo'";
+					$result=mysqli_query($link, $query);
+					$numero_filas = mysqli_num_rows($result);
+					if ($numero_filas==null){
+					echo'<p>La reserva no existe</p>';
+					echo'<a href="pagos.php"><p>Volver</p></a>';
+					echo exit;
+					} else{
+					$row = mysqli_fetch_object($result);
+							echo '<input type="hidden" name="id" value="' . $row->id . '" />';
+							echo '<input type="hidden" name="id_pasajero" value="' . $row->id_pasajero . '" />';
+							echo '<input type="hidden" name="id_vuelo" value="' . $row->id_vuelo . '" />';
+							echo '<input type="hidden" name="id_categorias" value="' . $row->id_categorias . '" />';
+							echo '<input type="hidden" name="fecha" value="' . $row->fecha . '" />';
+					}
+					?>
+					<p>Pago pendiente</p>
+					<br/>
 					<p>Realice su pago</p>
 					<br/>
 					<label>Nombre y Apellido</label>
@@ -89,6 +112,7 @@ $( ".datepicker" ).datepicker();
 					<input type="text" id="codseguridad" name="codseguridad" />
 					<br/><br/>
 					<input type="submit" value="Pagar" id="botonverif" />
+
 				</form>
 			</div>
 		</div>
