@@ -53,10 +53,10 @@ $( ".datepicker" ).datepicker();
 			<a href="index.html"><div id="logo"></div></a>
 			<div class="navbar">
 				<ul id="menu">
-					<li id="menu_active"><a href="index.html">Home</a></li>
-					<li><a href="flota.html">Nuestra Flota</a></li>
+					<li><a href="index.php">Home</a></li>
 					<li><a href="destinos.html">Destinos</a></li>
-					<li><a href="checkinn.html">Check inn</a></li>
+					<li><a href="pagos.php">Pagos</a></li>
+					<li id="menu_active"><a href="checkinn.php">Check inn</a></li>
 					<li><a href="contacto.html">Contacto</a></li>
 				</ul>
 			</div>

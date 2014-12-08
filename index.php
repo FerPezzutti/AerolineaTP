@@ -1,3 +1,7 @@
+<?php
+	require_once("/conexion.php");
+?>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -43,121 +47,13 @@
 <script>
 $.datepicker.regional['es'] = {
 monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
-dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sabado'],
 };
 $.datepicker.setDefaults($.datepicker.regional['es']);
 $(function() {
 $( ".datepicker" ).datepicker({ dateFormat: "DD, d MM, yy" });
 });
 </script>
-
-<script>
-$(function() {
-var availableTags = [
-"Alto Río Senguer",
-"Azul",
-"Bahía Blanca",
-"Bariloche",
-"Bolívar",
-"Buenos Aires",
-"Campo de Mayo",
-"Caviahue",
-"Ceres",
-"Chamical",
-"Chepes",
-"Chilecito",
-"Clorinda",
-"Comodoro Rivadavia",
-"Córdoba",
-"Concordia",
-"Coronel Suárez",
-"Corrientes",
-"Curuzú Cuatiá",
-"Cutral-Co",
-"Dolores",
-"Don Torcuato",
-"El Bolsón",
-"El Calafate",
-"El Palomar",
-"Esquel",
-"Ezeiza",
-"Formosa",
-"General Alvear",
-"General Pico",
-"General Roca",
-"Ingeniero Jacobacci",
-"Isla Martín García",
-"José C. Paz",
-"Junín",
-"Laboulaye",
-"La Cumbre",
-"La Plata",
-"La Rioja",
-"Las Heras",
-"Las Lomitas",
-"Malargüe",
-"Mar del Plata",
-"Mendoza",
-"Merlo",
-"Miramar",
-"Monte Caseros",
-"Morón",
-"Necochea",
-"Neuquén",
-"Olavarría",
-"Paraná",
-"Paso de los Libres",
-"Pehuajó",
-"Perico",
-"Perito Moreno",
-"Posadas",
-"Puerto Deseado",
-"Puerto Iguazú",
-"Puerto Madryn",
-"Puerto San Julián",
-"Puerto Santa Cruz",
-"Presidencia Roque Saenz Peña",
-"Reconquista",
-"Resistencia",
-"Río Cuarto",
-"Río Gallegos",
-"Río Grande",
-"Río Turbio",
-"Rosario",
-"Salta",
-"San Fernando",
-"San Fernando del Valle de Catamarca",
-"San Juan",
-"San Luis",
-"San Rafael",
-"San Ramón de la Nueva Orán",
-"San Justo",
-"San Miguel de Tucumán",
-"Santa Rosa",
-"Santa Teresita",
-"Santiago del Estero",
-"San Martín de los Andes",
-"Sauce Viejo",
-"Sunchales",
-"Tandil",
-"Tartagal",
-"Termas de Río Hondo",
-"Trelew",
-"Tres Arroyos",
-"Ushuaia",
-"Viedma",
-"Villa Dolores",
-"Villa Gesell",
-"Villa Reynolds",
-"Villaguay",
-"Zapala"
-];
-$( ".inputdestinos" ).autocomplete({
-source: availableTags
-});
-});
-</script>
-
 <title>Aerolinea Universitaria</title>	
 </head>
 <body>
@@ -167,8 +63,8 @@ source: availableTags
 			<div class="navbar">
 				<ul id="menu">
 					<li id="menu_active"><a href="index.php">Home</a></li>
-					<li><a href="flota.html">Nuestra Flota</a></li>
 					<li><a href="destinos.html">Destinos</a></li>
+					<li><a href="pagos.php">Pagos</a></li>
 					<li><a href="checkinn.php">Check inn</a></li>
 					<li><a href="contacto.html">Contacto</a></li>
 				</ul>
@@ -182,17 +78,23 @@ source: availableTags
 				<div class="cajasform">
 					<h4><span class="numeros">01</span> Vuelo</h4>
 					<br/>
-					<input type="radio" value="soloida" name="idaovuelta" id="idaovuelta" class="radios" checked/>
+					<input type="radio" value="soloida" name="idaovuelta" id="ida" class="radios" checked onclick="ocultar(this)"/>
 					<label>Ida</label>
-					<input type="radio" value="idavuelta" name="idaovuelta" id="idaovuelta" class="radios"/>
+					<input type="radio" value="idavuelta" name="idaovuelta" id="idaovuelta" class="radios" onclick="ocultar(this)"/>
 					<br/>
 					<label>Ida+Vuelta</label>
 					<br/>
 					<label>Categoria:</label>
 					<select class="selectcat" name="categoria" id="categoria">
-						<option value="0"></option>
-						<option value="econ">Economy</option>
-						<option value="pri">Primera</option>
+					<option value="" selected></option>
+						<?php
+							$query="SELECT * FROM categorias";
+							$result=mysqli_query($link, $query);
+							while($row = mysqli_fetch_object($result))
+							{
+								echo "<option value=" . $row->id . ">" . $row->nombre . "</option>";
+							}
+						?>
 					</select>
 				</div>
 				<div class="separador">
@@ -201,10 +103,30 @@ source: availableTags
 					<h4><span class="numeros">02</span> Destinos</h4>
 					<br/>
 					<label>Origen</label>
-					<input type="text" placeholder="" class="inputdestinos" id="origen" name="origen" />
+					<select class="inputdestinos" name="origen" id="origen">
+						<option value="0" selected></option>
+						<?php
+							$query="SELECT * FROM aeropuertos";
+							$result=mysqli_query($link, $query);
+							while($row = mysqli_fetch_object($result))
+							{
+								echo "<option value=" . $row->id . ">" . $row->ciudad . "</option>";
+							}
+						?>
+					</select>
 					<br/>
 					<label>Destino</label>
-					<input type="text" placeholder="" class="inputdestinos" id="destino" name="destino" />
+					<select class="inputdestinos" name="destino" id="destino">
+						<option value="0" selected></option>
+						<?php
+							$query="SELECT * FROM aeropuertos";
+							$result=mysqli_query($link, $query);
+							while($row = mysqli_fetch_object($result))
+							{
+								echo "<option value=" . $row->id . ">" . $row->ciudad . "</option>";
+							}
+						?>
+					</select>
 				</div>
 				<div class="separador">
 				</div>
@@ -213,8 +135,10 @@ source: availableTags
 					<br/>
 					<label>Desde</label>
 					<input type="text" class="datepicker" name="fechaida" class="fechaida" id="fechaida" />
+					<div id="oculto">
 					<label>Hasta</label>
 					<input type="text" class="datepicker" name="fechavuelta" class="fechavuelta" id="fechavuelta"/>
+					</div>
 				</div>
 				<div class="separador">
 				</div>
